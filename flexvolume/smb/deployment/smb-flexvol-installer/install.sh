@@ -15,7 +15,8 @@ mkdir -p ${smb_vol_dir} >> $LOG 2>&1
 #copy smb script
 cp /bin/smb ${smb_vol_dir}/smb >> $LOG 2>&1
 chmod a+x ${smb_vol_dir}/smb >> $LOG 2>&1
-
+cp /usr/bin/jq ${smb_vol_dir}/jq >> $LOG 2>&1
+chmod a+x ${smb_vol_dir}/jq >> $LOG 2>&1
 echo "install smb FlexVolume driver completed." >> $LOG
 
 #https://github.com/kubernetes/kubernetes/issues/17182
