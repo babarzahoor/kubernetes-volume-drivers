@@ -20,7 +20,7 @@ spec:
         imagePullPolicy: Always
         volumeMounts:
         - name: volplugins
-          mountPath: /var/volplugins/
+          mountPath: /usr/libexec/kubernetes/kubelet-plugins/volume/exec/
         - name: varlog
           mountPath: /var/log/
       volumes:
