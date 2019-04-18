@@ -1,22 +1,18 @@
-# CIFS/SMB FlexVolume driver for Kubernetes (Preview)
+# CIFS/SMB FlexVolume driver for Kubernetes - Tested on Pivotal Container Service (PKS) - Preview
  - supported Kubernetes version: available from v1.7
  - supported agent OS: Linux 
 
 # About
-This driver allows Kubernetes to access SMB server by using [CIFS/SMB](https://en.wikipedia.org/wiki/Server_Message_Block) protocol.
+This driver allows Kubernetes to access SMB server by using [CIFS/SMB](https://en.wikipedia.org/wiki/Server_Message_Block) protocol. It was adapted from the work done by Microsoft for AKS on Azure. https://github.com/Azure/kubernetes-volume-drivers.
+The main limitation for supporting this on PKS was the fact that `jq` and `cifs-utils` were needed on be installed on each worker node. However, in PKS the worker nodes are managed by BOSH and can be recreated at any point. `cifs` is already a part of the default worker node, but `jq` is not. This fork adds `jq` along with the driver to that no additional installations are required.
 
 ### Latest Container Image:
 `odedia/smb-flexvolume:latest`
 
 # Install smb FlexVolume driver on a kubernetes cluster
-## 1. config kubelet service to enable FlexVolume driver
-> Note: skip this step in [AKS](https://azure.microsoft.com/en-us/services/container-service/) and [aks-engine](https://github.com/Azure/aks-engine)
 
-Please refer to [config kubelet service to enable FlexVolume driver](https://github.com/Azure/kubernetes-volume-drivers/blob/master/flexvolume/README.md#config-kubelet-service-to-enable-flexvolume-driver)
- 
-## 2. install smb FlexVolume driver on every agent VM
- > Note: You may replace `/etc/kubernetes/volumeplugins` with `/usr/libexec/kubernetes/kubelet-plugins/volume/exec/`(by default) in `install-smb-flexvol-ubuntu.sh` if it's not a k8s cluster created by [AKS](https://azure.microsoft.com/en-us/services/container-service/) or [acs-engine](https://github.com/Azure/acs-engine)
-### Option#1. Automatically install by k8s daemonset
+## 1. install smb FlexVolume driver on every agent VM via Daemon Set
+
 create daemonset to install smb driver
 ```
 kubectl apply -f https://raw.githubusercontent.com/odedia/kubernetes-volume-drivers/master/flexvolume/smb/deployment/smb-flexvol-installer.yaml
@@ -26,17 +22,9 @@ kubectl apply -f https://raw.githubusercontent.com/odedia/kubernetes-volume-driv
 watch kubectl describe daemonset smb-flexvol-installer --namespace=kube-system
 watch kubectl get po --namespace=kube-system -o wide
 ```
-> Note: for deployment on v1.7, it requires restarting kubelet on every node(`sudo systemctl restart kubelet`) after daemonset running complete due to [Dynamic Plugin Discovery](https://github.com/kubernetes/community/blob/master/contributors/devel/flexvolume.md#dynamic-plugin-discovery) not supported on k8s v1.7
-
-### Option#2. install smb FlexVolume driver manually
- - run following command on every agent node
- > Note: below script only applies to Ubuntu
-```
-curl -skSL https://raw.githubusercontent.com/Azure/kubernetes-volume-drivers/master/flexvolume/smb/deployment/install-smb-flexvol-ubuntu.sh | sh -s --
-```
 
 # Basic Usage
-## 1. create a secret which stores smb account name and password
+## 2. create a secret which stores smb account name and password
 ```
 kubectl create secret generic smbcreds --from-literal username=USERNAME --from-literal password="PASSWORD" --type="microsoft.com/smb"
 ```
@@ -45,7 +33,7 @@ kubectl create secret generic smbcreds --from-literal username=USERNAME --from-l
 #### Option#1 Ties a flexvolume volume explicitly to a pod
 - download `nginx-flex-smb.yaml` file and modify `source` field
 ```
-wget -O nginx-flex-smb.yaml https://raw.githubusercontent.com/Azure/kubernetes-volume-drivers/master/flexvolume/smb/nginx-flex-smb.yaml
+wget -O nginx-flex-smb.yaml https://raw.githubusercontent.com/odedia/kubernetes-volume-drivers/master/flexvolume/smb/nginx-flex-smb.yaml
 vi nginx-flex-smb.yaml
 ```
  - create a pod with smb flexvolume driver mount
@@ -57,14 +45,13 @@ kubectl create -f nginx-flex-smb.yaml
  > Note: access modes of smb PV supports ReadWriteOnce(RWO), ReadOnlyMany(ROX) and ReadWriteMany(RWX)
  - download `pv-smb-flexvol.yaml` file, modify `source` field and create a smb flexvolume persistent volume(PV)
 ```
-wget https://raw.githubusercontent.com/Azure/kubernetes-volume-drivers/master/flexvolume/smb/pv-smb-flexvol.yaml
-vi pv-smb-flexvol.yaml
+wget https://raw.githubusercontent.com/odedia/kubernetes-volume-drivers/master/flexvolume/smb/pv-smb-flexvol.yaml
 kubectl create -f pv-smb-flexvol.yaml
 ```
 
  - create a smb flexvolume persistent volume claim(PVC)
 ```
- kubectl create -f https://raw.githubusercontent.com/Azure/kubernetes-volume-drivers/master/flexvolume/smb/pvc-smb-flexvol.yaml
+ kubectl create -f https://raw.githubusercontent.com/odedia/kubernetes-volume-drivers/master/flexvolume/smb/pvc-smb-flexvol.yaml
 ```
 
  - check status of PV & PVC until its Status changed from `Pending` to `Bound`
@@ -75,7 +62,7 @@ kubectl create -f pv-smb-flexvol.yaml
  
  - create a pod with smb flexvolume PVC
 ```
- kubectl create -f https://raw.githubusercontent.com/Azure/kubernetes-volume-drivers/master/flexvolume/smb/nginx-flex-smb-pvc.yaml
+ kubectl create -f https://raw.githubusercontent.com/odedia/kubernetes-volume-drivers/master/flexvolume/smb/nginx-flex-smb-pvc.yaml
  ```
 
 ## 3. enter the pod container to do validation
@@ -122,7 +109,7 @@ kubectl describe po smb-flexvol-installer-xxxxx -n kube-system | grep smb-flexvo
 ```
 MountVolume.SetUp failed for volume "test" : invalid character 'C' looking for beginning of value
 ```
-Please attach log file `/var/log/smb-driver.log` and file an issue
+Please checl the log at `/var/log/smb-driver.log` on the worker nodes.
 
 ### Links
 [CIFS/SMB wiki](https://en.wikipedia.org/wiki/Server_Message_Block)
