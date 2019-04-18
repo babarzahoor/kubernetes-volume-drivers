@@ -23,15 +23,10 @@ spec:
           mountPath: /var/volplugins/
         - name: varlog
           mountPath: /var/log/
-        - name: jqinstall
-          mountPath: /var/local/bin/
       volumes:
       - name: varlog
         hostPath:
           path: /var/log/              
-      - name: jqinstall
-        hostPath:
-          path: /usr/local/bin/
       - name: volplugins
         hostPath:
           path: /usr/libexec/kubernetes/kubelet-plugins/volume/exec/
