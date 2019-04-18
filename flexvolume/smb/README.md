@@ -6,7 +6,7 @@
 This driver allows Kubernetes to access SMB server by using [CIFS/SMB](https://en.wikipedia.org/wiki/Server_Message_Block) protocol.
 
 ### Latest Container Image:
-`mcr.microsoft.com/k8s/flexvolume/smb-flexvolume:1.0.2`
+`odedia/smb-flexvolume:latest`
 
 # Install smb FlexVolume driver on a kubernetes cluster
 ## 1. config kubelet service to enable FlexVolume driver
