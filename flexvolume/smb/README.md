@@ -1,5 +1,5 @@
 # CIFS/SMB FlexVolume driver for Kubernetes - Tested on Pivotal Container Service (PKS) - Preview
- - supported Kubernetes version: available from v1.7
+ - supported Kubernetes version: available from v1.12 (PKS version 1.3)
  - supported agent OS: Linux 
 
 # About
