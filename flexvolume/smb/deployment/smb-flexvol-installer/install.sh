@@ -6,7 +6,7 @@ target_dir="${TARGET_DIR}"
 echo "begin to install smb FlexVolume driver ${VER} ..." >> $LOG
 
 if [[ -z "${target_dir}" ]]; then
-  target_dir="/var/volplugins"
+  target_dir="/usr/libexec/kubernetes/kubelet-plugins/volume/exec"
 fi
 
 smb_vol_dir="${target_dir}/microsoft.com~smb"
