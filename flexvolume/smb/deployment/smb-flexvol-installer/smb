@@ -41,9 +41,9 @@ mount() {
 	VOLUME_SRC=$(echo "$JSON"|"$JQ" -r '.source')
 	READ_MODE=$(echo "$JSON"|"$JQ" -r '.["kubernetes.io/readwrite"]')
 	MOUNT_OPTIONS=$(echo "$JSON"|"$JQ" -r '.mountoptions // empty')
-	USERNAME=$(echo "$JSON"|"$JQ" -r '.["kubernetes.io/secret/username"]'|base64 -d)
-	PASSWORD=$(echo "$JSON"|"$JQ" -r '.["kubernetes.io/secret/password"]'|base64 -d)
-	DOMAIN=$(echo "$JSON"|"$JQ" -r '.["kubernetes.io/secret/domain"]'|base64 -d)
+	USERNAME=$(echo "$JSON"|"$JQ" -r '.["kubernetes.io/secret/username"] // empty'|base64 -d)
+	PASSWORD=$(echo "$JSON"|"$JQ" -r '.["kubernetes.io/secret/password"] // empty'|base64 -d)
+	DOMAIN=$(echo "$JSON"|"$JQ" -r '.["kubernetes.io/secret/domain"] // empty'|base64 -d)
 
 	ALL_OPTIONS="username=${USERNAME},password=${PASSWORD},${READ_MODE}"
 	if [ -n "$DOMAIN" ]; then
