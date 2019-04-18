@@ -6,7 +6,7 @@ target_dir="${TARGET_DIR}"
 echo "begin to install smb FlexVolume driver ${VER} ..." >> $LOG
 
 if [[ -z "${target_dir}" ]]; then
-  target_dir="/etc/kubernetes/volumeplugins"
+  target_dir="/usr/libexec/kubernetes/kubelet-plugins/volume/exec"
 fi
 
 smb_vol_dir="${target_dir}/microsoft.com~smb"
@@ -15,8 +15,8 @@ mkdir -p ${smb_vol_dir} >> $LOG 2>&1
 #copy smb script
 cp /bin/smb ${smb_vol_dir}/smb >> $LOG 2>&1
 chmod a+x ${smb_vol_dir}/smb >> $LOG 2>&1
-cp /bin/jq ${smb_vol_dir}/jq >> $LOG 2>&1
-chmod a+x ${smb_vol_dir}/jq >> $LOG 2>&1
+cp /bin/jq /usr/local/bin/jq >> $LOG 2>&1
+chmod a+x /usr/local/bin/jq >> $LOG 2>&1
 echo "install smb FlexVolume driver completed." >> $LOG
 
 #https://github.com/kubernetes/kubernetes/issues/17182

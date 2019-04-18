@@ -16,11 +16,11 @@ spec:
     spec:
       containers:
       - name: smb-flexvol-installer
-        image: mcr.microsoft.com/k8s/flexvolume/smb-flexvolume
+        image: odedia/smb-flexvolume
         imagePullPolicy: Always
         volumeMounts:
         - name: volplugins
-          mountPath: /usr/libexec/kubernetes/kubelet-plugins/volume/exec/ 
+          mountPath: /usr/libexec/kubernetes/kubelet-plugins/volume/exec/
         - name: varlog
           mountPath: /var/log/      
       volumes:
