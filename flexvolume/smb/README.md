@@ -19,7 +19,7 @@ Please refer to [config kubelet service to enable FlexVolume driver](https://git
 ### Option#1. Automatically install by k8s daemonset
 create daemonset to install smb driver
 ```
-kubectl apply -f https://raw.githubusercontent.com/Azure/kubernetes-volume-drivers/master/flexvolume/smb/deployment/smb-flexvol-installer.yaml
+kubectl apply -f https://raw.githubusercontent.com/odedia/kubernetes-volume-drivers/master/flexvolume/smb/deployment/smb-flexvol-installer.yaml
 ```
  - check daemonset status:
 ```
