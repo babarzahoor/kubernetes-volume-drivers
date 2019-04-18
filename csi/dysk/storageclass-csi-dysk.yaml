@@ -1,8 +1,0 @@
-apiVersion: storage.k8s.io/v1beta1
-kind: StorageClass
-metadata:
-  name: csi-dysk
-provisioner: csi-dysk
-parameters:
-  csiProvisionerSecretName: dyskcreds
-  csiProvisionerSecretNamespace: default
