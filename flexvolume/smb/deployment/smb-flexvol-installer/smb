@@ -35,8 +35,8 @@ ismounted() {
 }
 
 mount() {
-	echo "JQ IS ${JQ}"
-	$JQ --help
+	echo "JQ IS ${JQ}"  >> $LOG
+	$JQ --help  >> $LOG 2>&1
 	MNTPATH="$1"
 	VOLUME_SRC=$(echo "$JSON"|"$JQ" -r '.source')
 	READ_MODE=$(echo "$JSON"|"$JQ" -r '.["kubernetes.io/readwrite"]')
@@ -46,6 +46,7 @@ mount() {
 	DOMAIN=$(echo "$JSON"|"$JQ" -r '.["kubernetes.io/secret/domain"] // empty'|base64 -d)
 
 	ALL_OPTIONS="username=${USERNAME},password=${PASSWORD},${READ_MODE}"
+	echo "ALL_OPTIONS is set to ${ALL_OPTIONS}" >> $LOG
 	if [ -n "$DOMAIN" ]; then
 		ALL_OPTIONS="${ALL_OPTIONS},domain=${DOMAIN}"
 	fi
