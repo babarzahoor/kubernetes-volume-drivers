@@ -4,7 +4,7 @@
 #  - Please install "jq" package before using this driver.
 
 DIR=$(dirname "$(readlink -f "$0")")
-JQ="/usr/local/bin/jq"
+JQ="./jq"
 LOG="/var/log/smb-driver.log"
 VER="1.0.2"
 
