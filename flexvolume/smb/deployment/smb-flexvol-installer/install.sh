@@ -10,7 +10,9 @@ if [[ -z "${target_dir}" ]]; then
 fi
 
 smb_vol_dir="${target_dir}/microsoft.com~smb"
+echo "Creating dir ${smb_vol_dir}..." >> $LOG
 mkdir -p ${smb_vol_dir} >> $LOG 2>&1
+echo "Created dir ${smb_vol_dir}..." >> $LOG
 
 #copy smb script
 cp /bin/smb ${smb_vol_dir}/smb >> $LOG 2>&1
